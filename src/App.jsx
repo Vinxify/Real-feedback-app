@@ -6,37 +6,51 @@ import FeedbackStats from "./components/FeedbackStats.jsx";
 import FeedbackForm from "./components/FeedbackForm.jsx";
 import AboutPage from "./components/AboutPage.jsx";
 import { FeedbackProvider } from "./context/FeedbackContext.jsx";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+// import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import AboutPageIcon from "./components/AboutPageIcon.jsx";
-import Loading from "./components/shared/Loading.jsx";
+// import AboutPageIcon from "./components/AboutPageIcon.jsx";
+// import Loading from "./components/shared/Loading.jsx";
 
 function App() {
   return (
     <FeedbackProvider>
-      <BrowserRouter>
-        <Header />
+      <Header />
 
-        <div className='container'>
-          <Routes>
-            <Route
-              path='/'
-              element={
-                <>
-                  <FeedbackForm />
+      <div className='container'>
+        <FeedbackForm />
 
-                  <FeedbackStats />
+        <FeedbackStats />
 
-                  <FeedbackList />
-                </>
-              }
-            />
-
-            <Route path='/about' element={<AboutPage />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+        <FeedbackList />
+      </div>
     </FeedbackProvider>
+
+    // function App() {
+    //   return (
+    //     <FeedbackProvider>
+    //       <BrowserRouter>
+    //         <Header />
+
+    //         <div className='container'>
+    //           <Routes>
+    //             <Route
+    //               path='/'
+    //               element={
+    //                 <>
+    //                   <FeedbackForm />
+
+    //                   <FeedbackStats />
+
+    //                   <FeedbackList />
+    //                 </>
+    //               }
+    //             />
+
+    //             <Route path='/about' element={<AboutPage />} />
+    //           </Routes>
+    //         </div>
+    //       </BrowserRouter>
+    //     </FeedbackProvider>
 
     // <FeedbackProvider>
     //   <Router>
