@@ -30,10 +30,8 @@ export const FeedbackProvider = ({ children }) => {
       const response = await fetch(`${API_URL}?_sort=id&_order=desc`);
       if (!response.ok) throw new Error("Something went wrong");
       const data = await response.json();
-      console.log(data);
       setFeedback(data);
     } catch (err) {
-      console.error(`${err.message}`);
       setWebError(`${err.message}`);
     } finally {
       setIsLoading(false);
@@ -48,7 +46,6 @@ export const FeedbackProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newFeedback),
       });
-      console.log(response);
       if (!response || !response.ok) throw new Error("something went wrong");
       const data = await response.json();
 
@@ -63,13 +60,12 @@ export const FeedbackProvider = ({ children }) => {
     try {
       if (window.confirm("Are you sure that you want to delete")) {
         const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        console.log(response);
+
         if (!response && !response.ok) throw new Error("Error from deleting");
 
         setFeedback(feedback.filter((item) => item.id !== id));
       }
     } catch (err) {
-      console.error(`${err.message}`);
       setWebError(`${err.message}`);
     }
   };
