@@ -218,6 +218,10 @@ input:focus {
 }
 
 @media (max-width: 600px) {
+  #root {
+    padding: 1%;
+  }
+
   .rating li {
     margin: 10px 3px;
   }
