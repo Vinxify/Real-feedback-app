@@ -21,11 +21,10 @@ function FeedbackList() {
     );
   }
   if (webError) return <ErrorMessage message={webError} />;
+  // console.log(isLoading, webError);
 
   if (!isLoading && !webError) {
-    return isLoading ? (
-      <Loading />
-    ) : (
+    return (
       <div className='feedback-list'>
         <AnimatePresence>
           {feedback.map((item) => (

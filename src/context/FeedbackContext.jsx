@@ -10,6 +10,7 @@ export const FeedbackProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [feedback, setFeedback] = useState(FeedbackData);
   const [webError, setWebError] = useState("");
+  const [flag, setFlag] = useState(false);
 
   const [feedbackEdit, setFeedbackEdit] = useState({
     item: {},
@@ -21,77 +22,113 @@ export const FeedbackProvider = ({ children }) => {
   useEffect(() => {
     fetchFeedback();
     setWebError("");
-  }, []);
+    setFlag(false);
+  }, [flag ? flag : null]);
+  // console.log(feedback);
 
   const fetchFeedback = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`${API_URL}?_sort=id&_order=desc`);
-      if (!response.ok) throw new Error("Something went wrong");
-      const data = await response.json();
-      setFeedback(data);
-    } catch (err) {
-      setWebError(`${err.message}`);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   setIsLoading(true);
+    //   const response = await fetch(`${API_URL}?_sort=id&_order=desc`);
+    //   if (!response.ok) throw new Error("Something went wrong");
+    //   const data = await response.json();
+    //   setFeedback(data);
+    // } catch (err) {
+    //   setWebError(`${err.message}`);
+    // } finally {
+    // }
+
+    let feedback = JSON.parse(localStorage.getItem("myData")) || [];
+    setFeedback(feedback);
+    setIsLoading(false);
+
+    // console.log(feedback);
   };
 
   // Add feedback
-  const addFeedback = async (newFeedback) => {
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newFeedback),
-      });
-      if (!response || !response.ok) throw new Error("something went wrong");
-      const data = await response.json();
+  const addFeedback = (newFeedback) => {
+    // try {
+    //   // const response = await fetch(API_URL, {
+    //   //   method: "POST",
+    //   //   headers: { "Content-Type": "application/json" },
+    //   //   body: JSON.stringify(newFeedback),
+    //   // });
+    //   // if (!response || !response.ok) throw new Error("something went wrong");
+    //   // const data = await response.json();
 
-      setFeedback([data, ...feedback]);
-    } catch (err) {
-      setWebError(`${err.message}`);
+    //   // setFeedback([data, ...feedback]);
+
+    // } catch (err) {
+    //   setWebError(`${err.message}`);
+    // }
+
+    let feedbackData = JSON.parse(localStorage.getItem("myData")) || [];
+    let myFeedbackData = [newFeedback, ...feedbackData];
+    // myFeedback.push(newFeedback);
+    localStorage.setItem("myData", JSON.stringify(myFeedbackData));
+
+    if (myFeedbackData.length > feedbackData.length) {
+      setFlag(true);
     }
   };
 
   // Delete feedback
-  const deleteFeedback = async (id) => {
-    try {
-      if (window.confirm("Are you sure that you want to delete")) {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+  const deleteFeedback = (id) => {
+    // try {
+    //   if (window.confirm("Are you sure that you want to delete")) {
+    //     const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 
-        if (!response && !response.ok) throw new Error("Error from deleting");
+    //     if (!response && !response.ok) throw new Error("Error from deleting");
 
-        setFeedback(feedback.filter((item) => item.id !== id));
+    //     setFeedback(feedback.filter((item) => item.id !== id));
+    //   }
+    // } catch (err) {
+    //   setWebError(`${err.message}`);
+    // }
+    if (window.confirm("Are you sure that you want to delete")) {
+      const storageData = JSON.parse(localStorage.getItem("myData"));
+      let filterData = storageData.filter((item) => item.id !== id);
+      localStorage.setItem("myData", JSON.stringify(filterData));
+      if (filterData.length < storageData.length) {
+        setFlag(true);
       }
-    } catch (err) {
-      setWebError(`${err.message}`);
     }
   };
 
   // updated feedback
 
-  const updatedFeedback = async (id, updatedItem) => {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedItem),
-      });
+  const updatedFeedback = (id, updatedItem) => {
+    // try {
+    //   const response = await fetch(`${API_URL}/${id}`, {
+    //     method: "PUT",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(updatedItem),
+    //   });
 
-      if (!response || !response.ok) throw new Error("something went wrong");
+    //   if (!response || !response.ok) throw new Error("something went wrong");
 
-      const data = await response.json();
+    //   const data = await response.json();
 
-      setFeedback(
-        feedback.map((item) => (item.id === id ? { ...item, ...data } : item))
-      );
-    } catch (err) {
-      console.error(`${err}`);
-      setWebError(`${err}`);
-    }
+    //   setFeedback(
+    //     feedback.map((item) => (item.id === id ? { ...item, ...data } : item))
+    //   );
+    // } catch (err) {
+    //   console.error(`${err}`);
+    //   setWebError(`${err}`);
+    // }
+
+    const storageData = JSON.parse(localStorage.getItem("myData"));
+    const updateData = storageData.map((item) => {
+      if (item.id === id) {
+        item.text = updatedItem.text;
+        item.rating = updatedItem.rating;
+      }
+      return item;
+    });
+    localStorage.setItem("myData", JSON.stringify(updateData));
+    setFlag(true);
   };
 
   const editFeedback = (item) => {

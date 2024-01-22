@@ -35,12 +35,14 @@ function FeedbackForm() {
       const newFeedback = {
         text,
         rating,
+        id: Math.floor(Math.random() * 100),
       };
 
       if (feedbackEdit.edit === true) {
         updatedFeedback(feedbackEdit.item.id, newFeedback);
       } else {
         addFeedback(newFeedback);
+        let holdingFeedback = JSON.parse(localStorage.getItem("myData"));
       }
     }
     setText("");
@@ -71,7 +73,7 @@ function FeedbackForm() {
   return (
     <Card>
       <form onSubmit={handleSumbit}>
-        <h4>How will you rating our service</h4>
+        <h4>Rate our service</h4>
         <RatingSelect select={(rating) => setRating(rating)} />
         <div className='input-group'>
           <input
@@ -81,7 +83,7 @@ function FeedbackForm() {
             onChange={handleTextChange}
           />
           <Button version='secondary' isDisabled={btnDisabled} type='submit'>
-            Send
+            {feedbackEdit.edit === true ? "Update" : "Send"}
           </Button>
         </div>
 
